@@ -11,9 +11,7 @@ State::State(std::vector<std::vector<bool>> grid) : grid_ {grid} {}
 std::vector<std::vector<bool>> State::ReadSeedFile(std::string file_name, char dead, char alive)
 {
     std::ifstream seed(file_name);
-    
     std::string line;
-
     std::vector<std::vector<bool>> grid;
 
     for (int i; seed >> line;)
@@ -29,8 +27,6 @@ std::vector<std::vector<bool>> State::ReadSeedFile(std::string file_name, char d
         }
         grid.push_back(row);
     }
-
-    std::cout << "here\n";
 
     return grid;
 }
