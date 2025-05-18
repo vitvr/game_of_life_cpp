@@ -56,15 +56,17 @@ TEST(MatrixTest, Init)
 TEST(MatrixTest, AtGet)
 {
     Matrix<int> m1;
-    Matrix<int> m2(3, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9});
+    Matrix<int> m2(5, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
     EXPECT_ANY_THROW(m1.At(0, 0));
+    EXPECT_ANY_THROW(m2.At(5, 1));
     EXPECT_ANY_THROW(m2.At(1, 3));
 
     // edges
     EXPECT_EQ(1, m2.At(0, 0));
-    EXPECT_EQ(9, m2.At(2, 2));
+    EXPECT_EQ(15, m2.At(4, 2));
 
-    EXPECT_EQ(6, m2.At(1, 2));
+    EXPECT_EQ(8, m2.At(2, 1));
+    EXPECT_EQ(11, m2.At(3, 1));
 }
 
 TEST(MatrixTest, AtSet)
@@ -217,4 +219,42 @@ TEST(MatrixTest, RemoveColumn)
     m.RemoveColumn(1);
     EXPECT_EQ(1, m.Columns());
     EXPECT_EQ(v3, m.Data());
+}
+
+TEST(MatrixTest, GetSubRow)
+{
+    Matrix<int> m1(2, 3, {1, 2, 3, 4, 5, 6});
+    EXPECT_ANY_THROW(m1.GetSubRow(-1, 1, 1));
+    EXPECT_ANY_THROW(m1.GetSubRow(2, 1, 1));
+    EXPECT_ANY_THROW(m1.GetSubRow(1, -1, 1));
+    EXPECT_ANY_THROW(m1.GetSubRow(1, 3, 1));
+    EXPECT_ANY_THROW(m1.GetSubRow(1, 1, -1));
+    EXPECT_ANY_THROW(m1.GetSubRow(1, 1, 3));
+
+    // edge
+    EXPECT_EQ(std::vector<int>({1, 2, 3}), m1.GetSubRow(0, 0, 3));
+    EXPECT_EQ(std::vector<int>(), m1.GetSubRow(0, 0, 0));
+
+    EXPECT_EQ(std::vector<int>({2, 3}), m1.GetSubRow(0, 1, 2));
+    EXPECT_EQ(std::vector<int>({1, 2}), m1.GetSubRow(0, 0, 2));
+    EXPECT_EQ(std::vector<int>({5, 6}), m1.GetSubRow(1, 1, 2));
+}
+
+TEST(MatrixTest, GetSubColumn)
+{
+    Matrix<int> m1(4, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+    EXPECT_ANY_THROW(m1.GetSubColumn(-1, 1, 1));
+    EXPECT_ANY_THROW(m1.GetSubColumn(3, 1, 1));
+    EXPECT_ANY_THROW(m1.GetSubColumn(1, -1, 1));
+    EXPECT_ANY_THROW(m1.GetSubColumn(1, 4, 1));
+    EXPECT_ANY_THROW(m1.GetSubColumn(1, 1, -1));
+    EXPECT_ANY_THROW(m1.GetSubColumn(1, 1, 4));
+
+    // edge
+    EXPECT_EQ(std::vector<int>({1, 4, 7, 10}), m1.GetSubColumn(0, 0, 4));
+    EXPECT_EQ(std::vector<int>(), m1.GetSubColumn(0, 0, 0));
+
+    EXPECT_EQ(std::vector<int>({1, 4}), m1.GetSubColumn(0, 0, 2));
+    EXPECT_EQ(std::vector<int>({5, 8}), m1.GetSubColumn(1, 1, 2));
+    EXPECT_EQ(std::vector<int>({9}), m1.GetSubColumn(2, 2, 1));
 }

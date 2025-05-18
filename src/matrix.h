@@ -24,13 +24,15 @@ class Matrix
 
         // These create copiess rather than references to matrix elements
         std::vector<T> GetRow(int n);
+        std::vector<T> GetSubRow(int n, int pos, int length);
         std::vector<T> GetColumn(int n);
-        void RemoveRow(int n);
-        void RemoveColumn(int n);
-
+        std::vector<T> GetSubColumn(int n, int pos, int length);
+        
         void InsertRow(int pos, std::vector<T> row);
         void InsertColumn(int pos, std::vector<T> column);
 
+        void RemoveRow(int n);
+        void RemoveColumn(int n);
 
     private:
         int rows_;
@@ -107,15 +109,28 @@ T& Matrix<T>::At(int row, int column)
     if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
         throw std::out_of_range{""};
 
-    return data_[row * rows_ + column];
+    return data_[row * columns_ + column];
 }
 
 template <typename T>
-std::vector<T> Matrix<T>::GetRow(int n) {
+std::vector<T> Matrix<T>::GetRow(int n)
+{
     if (n < 0 || n >= rows_)
         throw std::out_of_range{""};
-    
+
     return std::vector<T>(std::next(data_.begin(), (n * columns_)), std::next(data_.begin(), (n * columns_) + columns_));
+}
+
+template <typename T>
+std::vector<T> Matrix<T>::GetSubRow(int n, int pos, int length)
+{
+    if (n < 0 || n >= rows_)
+        throw std::out_of_range{""};
+
+    if (pos < 0 || pos > columns_ || length < 0 || length > (columns_ - pos))
+        throw std::out_of_range{""};
+
+    return std::vector<T>(std::next(data_.begin(), (n * columns_) + pos), std::next(data_.begin(), (n * columns_) + pos + length));
 }
 
 template <typename T>
@@ -129,6 +144,27 @@ std::vector<T> Matrix<T>::GetColumn(int n)
 
     // for (typename std::vector<T>::iterator p = data_.begin(); p != data_.end(); p += columns_)
     for (auto p = std::next(data_.begin(), n); p != std::next(data_.end(), n); p = std::next(p, columns_))
+        column.push_back(*p);
+
+    return column;
+}
+
+template <typename T>
+std::vector<T> Matrix<T>::GetSubColumn(int n, int pos, int length)
+{
+    if (n < 0 || n >= columns_)
+        throw std::out_of_range{""};
+
+    if (pos < 0 || pos > rows_ || length < 0 || length > (rows_ - pos))
+        throw std::out_of_range{""};
+
+    if (length == 1)
+        return std::vector<T>({data_[pos * columns_ + n]});
+
+    std::vector<T> column;
+    column.reserve(length);
+
+    for (auto p = std::next(data_.begin(), n + (columns_ * pos)); p != std::next(data_.begin(), n + (columns_ * (pos + length))); p = std::next(p, columns_))
         column.push_back(*p);
 
     return column;
