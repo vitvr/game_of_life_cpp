@@ -130,31 +130,37 @@ TEST(MatrixTest, InsertRow)
     EXPECT_EQ(v2, m.Data());
 }
 
-// TEST(MatrixTest, InsertColumn)
-// {
-//     Matrix<int> m(2, 3, {1, 2, 3, 4, 5, 6});
-//     // valid columns
-//     std::vector<int> column1 = {10, 20};
-//     std::vector<int> column2 = {30, 40};
+TEST(MatrixTest, InsertColumn)
+{
+    Matrix<int> m(2, 3, {1, 2, 3, 4, 5, 6});
+    // valid columns
+    std::vector<int> column0 = {-1, -2};
+    std::vector<int> column1 = {10, 20};
+    std::vector<int> column2 = {30, 40};
 
-//     // invalid columns
-//     std::vector<int> column3 = {10};
-//     std::vector<int> column4 = {10, 20, 30};
+    // invalid columns
+    std::vector<int> column3 = {10};
+    std::vector<int> column4 = {10, 20, 30};
 
-//     // resulting matrices
-//     std::vector<int> v1 = {10, 1, 2, 3, 20, 4, 5, 6};
-//     std::vector<int> v2 = {10, 1, 2, 3, 20, 30, 4, 5, 6, 40};
+    // resulting matrices
+    std::vector<int> v1 = {10, 1, 2, 3, 20, 4, 5, 6};
+    std::vector<int> v2 = {10, 1, 2, 3, 30, 20, 4, 5, 6, 40};
+    std::vector<int> v0 = {10, 1, -1,  2, 3, 30, 20, 4, -2, 5, 6, 40};
 
-//     EXPECT_THROW(m.InsertColumn(-1, column1), std::out_of_range);
-//     EXPECT_THROW(m.InsertColumn(4, column2), std::out_of_range);
-//     EXPECT_THROW(m.InsertColumn(1, column3), std::length_error);
-//     EXPECT_THROW(m.InsertColumn(1, column4), std::length_error);
+    EXPECT_THROW(m.InsertColumn(-1, column1), std::out_of_range);
+    EXPECT_THROW(m.InsertColumn(4, column2), std::out_of_range);
+    EXPECT_THROW(m.InsertColumn(1, column3), std::length_error);
+    EXPECT_THROW(m.InsertColumn(1, column4), std::length_error);
 
-//     m.InsertColumn(0, column1);
-//     EXPECT_EQ(4, m.Columns());
-//     EXPECT_EQ(v1, m.Data());
+    m.InsertColumn(0, column1);
+    EXPECT_EQ(4, m.Columns());
+    EXPECT_EQ(v1, m.Data());
 
-//     m.InsertColumn(4, column2);
-//     EXPECT_EQ(5, m.Columns());
-//     EXPECT_EQ(v2, m.Data());
-// }
+    m.InsertColumn(4, column2);
+    EXPECT_EQ(5, m.Columns());
+    EXPECT_EQ(v2, m.Data());
+
+    m.InsertColumn(2, column0);
+    EXPECT_EQ(6, m.Columns());
+    EXPECT_EQ(v0, m.Data());
+}

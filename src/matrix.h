@@ -22,7 +22,7 @@ class Matrix
 
         T& At(int row, int column);
 
-        // These create copiess rather than references to matrix values
+        // These create copiess rather than references to matrix elements
         std::vector<T> GetRow(int n);
         std::vector<T> GetColumn(int n);
 
@@ -148,18 +148,27 @@ void Matrix<T>::InsertRow(int pos, std::vector<T> row)
     ++rows_;
 }
 
-// template <typename T>
-// void Matrix<T>::InsertColumn(int pos, std::vector<T> column)
-// {
-//     if (pos < 0 || pos > columns_)
-//         throw std::out_of_range{""};
-//     if (column.size() != rows_)
-//         throw std::length_error{"Input row length does not match matrix row length"};
+template <typename T>
+void Matrix<T>::InsertColumn(int pos, std::vector<T> column)
+{
+    if (pos < 0 || pos > columns_)
+        throw std::out_of_range{""};
+    if (column.size() != rows_)
+        throw std::length_error{"Input row length does not match matrix row length"};
 
-    
-//     auto inner_pos = std::next(data_.begin(), pos);
-//     for (; inner_pos != std::next(data_.end(), pos); inner_pos = std::next(inner_pos, columns_))
-//     // data_.insert(inner_pos, row.begin(), row.end());
+    // int i = 0;
+    // for (T elem : column)
+    // {
+    //     auto inner_pos = std::next(data_.begin(), (pos + (columns_ * i) + i));
+    //     data_.insert(inner_pos, elem);
+    //     ++i;
+    // }
 
-//     ++columns_;
-// }
+    for (int i = 0; i != rows_; ++i)
+    {
+        auto inner_pos = std::next(data_.begin(), (pos + (columns_ * i) + i));
+        data_.insert(inner_pos, column[i]);
+    }
+
+    ++columns_;
+}
