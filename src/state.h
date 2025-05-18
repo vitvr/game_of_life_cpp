@@ -1,26 +1,32 @@
-// #pragma once
+#ifndef LIFE_STATE_H_
+#define LIFE_STATE_H_
 
-#include <vector>
 #include <string>
+#include <vector>
 
-// This struct may be better suited for a separate render class
-// struct Offset {
-//     int v;
-//     int h;
-// };
+#include "matrix.h"
 
 class State
 {
     public:
-        State(std::string file_name, char dead, char alive);
-        State(std::vector<std::vector<bool>> grid);
-        State Get();
-        State Step();
-    private:
-        // Offset o_;
-        std::vector<std::vector<bool>> grid_;
+        State(Matrix<bool> grid);
+
+        Matrix<bool> GetMatrix();
+        int YOffset();
+        int XOffset();
+
+        // State Step();
         
-        int CountNeighbors();
-        void AddMargin();
-        std::vector<std::vector<bool>> ReadSeedFile(std::string file_name, char dead, char alive);
+    private:
+        Matrix<bool> grid_;
+
+        // coordinates of top left corner relative to center
+        // to keep track of cells' fixed position as matrix is resized
+        int y_offset_;
+        int x_offset_;
+        
+        // int CountNeighbors();
+        // void AddMargin();
 };
+
+#endif

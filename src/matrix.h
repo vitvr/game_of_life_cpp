@@ -1,3 +1,6 @@
+#ifndef LIFE_MATRIX_H_
+#define LIFE_MATRIX_H_
+
 #include <cinttypes>
 #include <initializer_list>
 #include <iostream>
@@ -234,3 +237,5 @@ void Matrix<T>::RemoveColumn(int n)
 
     --columns_;
 }
+
+#endif
