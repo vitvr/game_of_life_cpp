@@ -25,6 +25,8 @@ class Matrix
         // These create copiess rather than references to matrix elements
         std::vector<T> GetRow(int n);
         std::vector<T> GetColumn(int n);
+        void RemoveRow(int n);
+        void RemoveColumn(int n);
 
         void InsertRow(int pos, std::vector<T> row);
         void InsertColumn(int pos, std::vector<T> column);
@@ -102,36 +104,34 @@ int Matrix<T>::Columns() { return columns_; }
 template <typename T>
 T& Matrix<T>::At(int row, int column)
 {
-    if (row >= 0 && row < rows_ && column >= 0 && column < columns_)
-        return data_[row * rows_ + column];
-    else
+    if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
         throw std::out_of_range{""};
+
+    return data_[row * rows_ + column];
 }
 
 template <typename T>
 std::vector<T> Matrix<T>::GetRow(int n) {
-    if (n >= 0 && n < rows_)
-        return std::vector<T>(std::next(data_.begin(), (n * columns_)), std::next(data_.begin(), (n * columns_) + columns_));
-    else
+    if (n < 0 || n >= rows_)
         throw std::out_of_range{""};
+    
+    return std::vector<T>(std::next(data_.begin(), (n * columns_)), std::next(data_.begin(), (n * columns_) + columns_));
 }
 
 template <typename T>
 std::vector<T> Matrix<T>::GetColumn(int n)
 {
-    if (n >= 0 && n < columns_)
-    {
-        std::vector<T> column;
-        column.reserve(columns_);
-
-        // for (typename std::vector<T>::iterator p = data_.begin(); p != data_.end(); p += columns_)
-        for (auto p = std::next(data_.begin(), n); p != std::next(data_.end(), n); p = std::next(p, columns_))
-            column.push_back(*p);
-
-        return column;
-    }
-    else
+    if (n < 0 || n >= columns_)
         throw std::out_of_range{""};
+    
+    std::vector<T> column;
+    column.reserve(columns_);
+
+    // for (typename std::vector<T>::iterator p = data_.begin(); p != data_.end(); p += columns_)
+    for (auto p = std::next(data_.begin(), n); p != std::next(data_.end(), n); p = std::next(p, columns_))
+        column.push_back(*p);
+
+    return column;
 }
 
 template <typename T>
@@ -171,4 +171,30 @@ void Matrix<T>::InsertColumn(int pos, std::vector<T> column)
     }
 
     ++columns_;
+}
+
+template <typename T>
+void Matrix<T>::RemoveRow(int n)
+{
+    if (n < 0 || n >= rows_)
+        throw std::out_of_range{""};
+
+    data_.erase(std::next(data_.begin(), (n * columns_)), std::next(data_.begin(), (n * columns_) + columns_));
+    
+    --rows_;
+}
+
+template <typename T>
+void Matrix<T>::RemoveColumn(int n)
+{
+    if (n < 0 || n >= columns_)
+        throw std::out_of_range{""};
+
+    for (int i = 0; i != rows_; ++i)
+    {
+        auto inner_pos = std::next(data_.begin(), (n + (columns_ * i) - i));
+        data_.erase(inner_pos);
+    }
+
+    --columns_;
 }

@@ -164,3 +164,57 @@ TEST(MatrixTest, InsertColumn)
     EXPECT_EQ(6, m.Columns());
     EXPECT_EQ(v0, m.Data());
 }
+
+TEST(MatrixTest, RemoveRow)
+{
+    Matrix<int> m(4, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+
+    EXPECT_ANY_THROW(m.RemoveRow(-1));
+    EXPECT_ANY_THROW(m.RemoveRow(4));
+
+    std::vector<int> v1 = {4, 5, 6, 7, 8, 9, 10, 11, 12};
+    std::vector<int> v2 = {4, 5, 6, 10, 11, 12};
+    std::vector<int> v3 = {4, 5, 6};
+
+    // first
+    m.RemoveRow(0);
+    EXPECT_EQ(3, m.Rows());
+    EXPECT_EQ(v1, m.Data());
+
+    // middle
+    m.RemoveRow(1);
+    EXPECT_EQ(2, m.Rows());
+    EXPECT_EQ(v2, m.Data());
+
+    // last
+    m.RemoveRow(1);
+    EXPECT_EQ(1, m.Rows());
+    EXPECT_EQ(v3, m.Data());
+}
+
+TEST(MatrixTest, RemoveColumn)
+{
+    Matrix<int> m(3, 4, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});
+
+    EXPECT_ANY_THROW(m.RemoveColumn(-1));
+    EXPECT_ANY_THROW(m.RemoveColumn(4));
+
+    std::vector<int> v1 = {2, 3, 4, 6, 7, 8, 10, 11, 12};
+    std::vector<int> v2 = {2, 4, 6, 8, 10, 12};
+    std::vector<int> v3 = {2, 6, 10};
+
+    // first
+    m.RemoveColumn(0);
+    EXPECT_EQ(3, m.Columns());
+    EXPECT_EQ(v1, m.Data());
+
+    // middle
+    m.RemoveColumn(1);
+    EXPECT_EQ(2, m.Columns());
+    EXPECT_EQ(v2, m.Data());
+
+    // last
+    m.RemoveColumn(1);
+    EXPECT_EQ(1, m.Columns());
+    EXPECT_EQ(v3, m.Data());
+}
