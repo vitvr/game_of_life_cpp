@@ -23,7 +23,9 @@ class Matrix
         int Rows();
         int Columns();
 
-        T& At(int row, int column);
+        // T& At(int row, int column);
+        T Get(int row, int column);
+        void Set(int row, int column, T elem);
 
         // These create copiess rather than references to matrix elements
         std::vector<T> GetRow(int n);
@@ -106,13 +108,31 @@ int Matrix<T>::Rows() { return rows_; }
 template <typename T>
 int Matrix<T>::Columns() { return columns_; }
 
+// template <typename T>
+// T& Matrix<T>::At(int row, int column)
+// {
+//     if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
+//         throw std::out_of_range{""};
+
+//     return data_[row * columns_ + column];
+// }
+
 template <typename T>
-T& Matrix<T>::At(int row, int column)
+T Matrix<T>::Get(int row, int column)
 {
     if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
         throw std::out_of_range{""};
 
     return data_[row * columns_ + column];
+}
+
+template <typename T>
+void Matrix<T>::Set(int row, int column, T elem)
+{
+    if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
+        throw std::out_of_range{""};
+
+    data_[row * columns_ + column] = elem;
 }
 
 template <typename T>

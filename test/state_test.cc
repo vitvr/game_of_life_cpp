@@ -14,8 +14,8 @@ TEST(StateTest, InitAllFalse)
 TEST(StateTest, InitMargin)
 {
     Matrix<bool> m(3, 3); // offset (-1,-1)
-    m.At(0, 1) = true;
+    m.Set(0, 1, true);
     State s(m);
     EXPECT_EQ(-2, s.YOffset());
-    EXPECT_EQ(-3, s.YOffset());
+    EXPECT_EQ(-1, s.XOffset());
 }

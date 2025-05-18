@@ -53,29 +53,43 @@ TEST(MatrixTest, Init)
     EXPECT_EQ(std::vector({true, false, false, true}), m2.Data());
 }
 
-TEST(MatrixTest, AtGet)
+TEST(MatrixTest, Get)
 {
     Matrix<int> m1;
     Matrix<int> m2(5, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
-    EXPECT_ANY_THROW(m1.At(0, 0));
-    EXPECT_ANY_THROW(m2.At(5, 1));
-    EXPECT_ANY_THROW(m2.At(1, 3));
+    EXPECT_ANY_THROW(m1.Get(0, 0));
+    EXPECT_ANY_THROW(m2.Get(5, 1));
+    EXPECT_ANY_THROW(m2.Get(1, 3));
 
     // edges
-    EXPECT_EQ(1, m2.At(0, 0));
-    EXPECT_EQ(15, m2.At(4, 2));
+    EXPECT_EQ(1, m2.Get(0, 0));
+    EXPECT_EQ(15, m2.Get(4, 2));
 
-    EXPECT_EQ(8, m2.At(2, 1));
-    EXPECT_EQ(11, m2.At(3, 1));
+    EXPECT_EQ(8, m2.Get(2, 1));
+    EXPECT_EQ(11, m2.Get(3, 1));
 }
 
-TEST(MatrixTest, AtSet)
+TEST(MatrixTest, Set)
 {
     // edge and fail cases on previous test
+    Matrix<int> m1;
+    Matrix<int> m2(5, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
+    EXPECT_ANY_THROW(m1.Set(0, 0, 0));
+    EXPECT_ANY_THROW(m2.Set(5, 1, 0));
+    EXPECT_ANY_THROW(m2.Set(1, 3, 0));
 
-    Matrix<int> m1(3, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9});
-    m1.At(1, 2) = 9;
-    EXPECT_EQ(9, m1.At(1, 2));
+    // edges
+    m2.Set(0, 0, -1);
+    EXPECT_EQ(-1, m2.Get(0, 0));
+    m2.Set(4, 2, -2);
+    EXPECT_EQ(-2, m2.Get(4, 2));
+    
+    m2.Set(1, 1, -3);
+    EXPECT_EQ(-3, m2.Get(1, 1));
+
+    // Matrix<int> m1(3, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9});
+    // m1.Set(1, 2, 9);
+    // EXPECT_EQ(9, m1.Get(1, 2));
 }
 
 TEST(MatrixTest, GetRow)
