@@ -111,7 +111,7 @@ T& Matrix<T>::At(int row, int column)
 template <typename T>
 std::vector<T> Matrix<T>::GetRow(int n) {
     if (n >= 0 && n < rows_)
-        return std::vector<T>(data_.begin() + (n * columns_), data_.begin() + (n * columns_) + columns_);
+        return std::vector<T>(std::next(data_.begin(), (n * columns_)), std::next(data_.begin(), (n * columns_) + columns_));
     else
         throw std::out_of_range{""};
 }
@@ -125,7 +125,7 @@ std::vector<T> Matrix<T>::GetColumn(int n)
         column.reserve(columns_);
 
         // for (typename std::vector<T>::iterator p = data_.begin(); p != data_.end(); p += columns_)
-        for (auto p = data_.begin() + n; p != data_.end() + n; p += columns_)
+        for (auto p = std::next(data_.begin(), n); p != std::next(data_.end(), n); p = std::next(p, columns_))
             column.push_back(*p);
 
         return column;
@@ -158,7 +158,7 @@ void Matrix<T>::InsertRow(int pos, std::vector<T> row)
 
     
 //     auto inner_pos = std::next(data_.begin(), pos);
-//     for (; inner_pos != data_.end())
+//     for (; inner_pos != std::next(data_.end(), pos); inner_pos = std::next(inner_pos, columns_))
 //     // data_.insert(inner_pos, row.begin(), row.end());
 
 //     ++columns_;
