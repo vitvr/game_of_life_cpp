@@ -26,7 +26,7 @@ class State
         int x_offset_;
         
         // int CountNeighbors();
-        // void AddMargin();
+        void AddMargin();
 };
 
 #endif
