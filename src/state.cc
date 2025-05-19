@@ -16,6 +16,11 @@ int State::YOffset() { return y_offset_; }
 
 int State::XOffset() { return x_offset_; }
 
+void State::Step()
+{
+    
+}
+
 void State::AddMargin()
 {
     std::vector<bool> v = grid_.GetRow(0);
@@ -37,7 +42,7 @@ void State::AddMargin()
     if (std::find(v.begin(), v.end(), true) != v.end())
         grid_.InsertRow(grid_.Rows(), std::vector<bool>(grid_.Columns()));
 
-    v = grid_.GetRow(grid_.Columns() - 1);
+    v = grid_.GetColumn(grid_.Columns() - 1);
     if (std::find(v.begin(), v.end(), true) != v.end())
         grid_.InsertColumn(grid_.Columns(), std::vector<bool>(grid_.Rows()));
 }

@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <iterator>
 #include <stdexcept>
 #include <vector>
 
@@ -51,6 +52,25 @@ TEST(MatrixTest, Init)
 
     Matrix<bool> m2(2,2, {true, false, false, true});
     EXPECT_EQ(std::vector({true, false, false, true}), m2.Data());
+}
+
+TEST(MatrixTest, Iterator)
+{
+    Matrix<int> m1(2, 3, {1, 2, 3, 4, 5, 6});
+    EXPECT_EQ(*m1.begin(), *m1.Data().begin());
+    EXPECT_EQ(*std::next(m1.begin()), *std::next(m1.Data().begin()));
+    
+    Matrix<bool> m2(2, 3, {true, false, true, false, true, false});
+    EXPECT_EQ(*m2.begin(), *m2.Data().begin());
+    EXPECT_EQ(*std::next(m2.begin()), *std::next(m2.Data().begin()));
+
+    std::vector<bool> v;
+    for (bool i : m2)
+    {
+        v.push_back(i);
+    }
+
+    EXPECT_EQ(v, m2.Data());
 }
 
 TEST(MatrixTest, Get)

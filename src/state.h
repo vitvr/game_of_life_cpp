@@ -1,9 +1,6 @@
 #ifndef LIFE_STATE_H_
 #define LIFE_STATE_H_
 
-#include <string>
-#include <vector>
-
 #include "matrix.h"
 
 class State
@@ -15,7 +12,7 @@ class State
         int YOffset();
         int XOffset();
 
-        // State Step();
+        void Step();
         
     private:
         Matrix<bool> grid_;

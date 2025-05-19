@@ -23,6 +23,9 @@ class Matrix
         int Rows();
         int Columns();
 
+        typename std::vector<T>::iterator begin();
+        typename std::vector<T>::iterator end();
+
         // T& At(int row, int column);
         T Get(int row, int column);
         void Set(int row, int column, T elem);
@@ -107,6 +110,12 @@ int Matrix<T>::Rows() { return rows_; }
 
 template <typename T>
 int Matrix<T>::Columns() { return columns_; }
+
+template <typename T>
+typename std::vector<T>::iterator Matrix<T>::begin() { return data_.begin(); }
+
+template <typename T>
+typename std::vector<T>::iterator Matrix<T>::end() { return data_.end(); }
 
 // template <typename T>
 // T& Matrix<T>::At(int row, int column)
