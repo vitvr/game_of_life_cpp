@@ -22,15 +22,27 @@ TEST(StateTest, InitEmpty)
     EXPECT_EQ(2, s.Columns());
 }
 
-// TEST(StateTest, InitSmall)
-// {
-//     // matrix should be resized to at least 2x2 if smaller
-//     Matrix<bool> m();
-//     State s(m);
-//     EXPECT_EQ(std::vector<bool>({false, false, false, false}), s.GetMatrix().Data());
-//     EXPECT_EQ(2, s.Rows());
-//     EXPECT_EQ(2, s.Columns());
-// }
+TEST(StateTest, InitSmall)
+{
+    // matrix should be resized to at least 2x2 if smaller
+    Matrix<bool> m(1, 1, {false});
+    State s(m);
+    EXPECT_EQ(std::vector<bool>({false, false, false, false}), s.GetMatrix().Data());
+    EXPECT_EQ(2, s.Rows());
+    EXPECT_EQ(2, s.Columns());
+
+    m = Matrix<bool>(1, 3);
+    s = State(m);
+    EXPECT_EQ(std::vector<bool>({false, false, false, false, false, false}), s.GetMatrix().Data());
+    EXPECT_EQ(2, s.Rows());
+    EXPECT_EQ(3, s.Columns());
+
+    m = Matrix<bool>(3, 1);
+    s = State(m);
+    EXPECT_EQ(std::vector<bool>({false, false, false, false, false, false}), s.GetMatrix().Data());
+    EXPECT_EQ(3, s.Rows());
+    EXPECT_EQ(2, s.Columns());
+}
 
 TEST(StateTest, InitMargin)
 {

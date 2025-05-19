@@ -18,11 +18,11 @@ State::State(Matrix<bool> grid) : grid_ {grid}, y_offset_ {-int ((grid.Rows() - 
         return;
     }
 
-    while (grid_.Rows() == 1)
+    if (grid_.Rows() == 1)
         grid_.InsertRow(1, std::vector<bool>(grid_.Columns()));
 
     if (grid_.Columns() == 1)
-        grid_.InsertColumn(1, std::vector<bool>(grid.Rows()));
+        grid_.InsertColumn(1, std::vector<bool>(grid_.Rows()));
 
     AddMargin();
 }

@@ -53,6 +53,11 @@ TEST(MatrixTest, OutOfRangeInit)
 
 TEST(MatrixTest, Init)
 {
+    Matrix<bool> m0(1,1);
+    EXPECT_EQ(std::vector<bool>({false}), m0.Data());
+    EXPECT_EQ(1, m0.Rows());
+    EXPECT_EQ(1, m0.Columns());
+
     Matrix<bool> m1(2,3);
     EXPECT_EQ(std::vector<bool>(6), m1.Data());
     EXPECT_EQ(2, m1.Rows());
