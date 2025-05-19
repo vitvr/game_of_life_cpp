@@ -205,8 +205,21 @@ std::vector<T> Matrix<T>::GetSubColumn(int n, int pos, int length)
 template <typename T>
 void Matrix<T>::InsertRow(int pos, std::vector<T> row)
 {
+    if (row.empty())
+        throw std::length_error{"Input row is empty"};
+
     if (pos < 0 || pos > rows_)
         throw std::out_of_range{"Matrix<T>::InsertRow(pos, row), pos out of range"};
+    
+    if (data_.empty())
+    {
+        rows_ = 1;
+        columns_ = row.size();
+        data_ = row;
+
+        return;
+    }
+
     if (row.size() != columns_)
         throw std::length_error{"Input row length does not match matrix row length"};
 
@@ -219,8 +232,21 @@ void Matrix<T>::InsertRow(int pos, std::vector<T> row)
 template <typename T>
 void Matrix<T>::InsertColumn(int pos, std::vector<T> column)
 {
+    if (column.empty())
+        throw std::length_error{"Input column is empty"};
+
     if (pos < 0 || pos > columns_)
         throw std::out_of_range{"Matrix<T>::InsertColumn(pos, row), pos out of range"};
+
+    if (data_.empty())
+    {
+        columns_ = 1;
+        rows_ = column.size();
+        data_ = column;
+
+        return;
+    }
+    
     if (column.size() != rows_)
         throw std::length_error{"Input row length does not match matrix row length"};
 

@@ -137,6 +137,19 @@ TEST(MatrixTest, GetColumn)
     EXPECT_EQ(std::vector<int>({3, 6}), m1.GetColumn(2));
 }
 
+TEST(MatrixTest, InsertRowEmpty)
+{
+    Matrix<int> m;
+
+    EXPECT_ANY_THROW(m.InsertRow(0, std::vector<int>()));
+    EXPECT_ANY_THROW(m.InsertRow(1, std::vector<int>({1, 2, 3})));
+
+    m.InsertRow(0, std::vector<int>({1, 2, 3}));
+    EXPECT_EQ(std::vector<int>({1, 2, 3}), m.Data());
+    EXPECT_EQ(1, m.Rows());
+    EXPECT_EQ(3, m.Columns());
+}
+
 TEST(MatrixTest, InsertRow)
 {
     Matrix<int> m(2, 3, {1, 2, 3, 4, 5, 6});
@@ -164,6 +177,19 @@ TEST(MatrixTest, InsertRow)
     m.InsertRow(3, row2);
     EXPECT_EQ(4, m.Rows());
     EXPECT_EQ(v2, m.Data());
+}
+
+TEST(MatrixTest, InsertColumnEmpty)
+{
+    Matrix<int> m;
+
+    EXPECT_ANY_THROW(m.InsertColumn(0, std::vector<int>()));
+    EXPECT_ANY_THROW(m.InsertColumn(1, std::vector<int>({1, 2, 3})));
+
+    m.InsertColumn(0, std::vector<int>({1, 2, 3}));
+    EXPECT_EQ(std::vector<int>({1, 2, 3}), m.Data());
+    EXPECT_EQ(3, m.Rows());
+    EXPECT_EQ(1, m.Columns());
 }
 
 TEST(MatrixTest, InsertColumn)
