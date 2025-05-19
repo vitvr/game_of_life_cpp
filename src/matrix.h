@@ -23,6 +23,7 @@ class Matrix
         int Rows();
         int Columns();
 
+        bool empty();
         typename std::vector<T>::iterator begin();
         typename std::vector<T>::iterator end();
 
@@ -57,6 +58,9 @@ Matrix<T>::Matrix(int rows, int columns)
     if (rows < 0 || columns < 0)
         throw std::length_error{"Matrix constructor: negative size"};
 
+    if ((rows == 0 && columns != 0) || (rows != 0 && columns == 0))
+        throw std::length_error{"Matrix constructor: cannot have rows when there are 0 columns and vice versa"};
+
     rows_ = rows;
     columns_ = columns;
     data_ = std::vector<T>(rows * columns);
@@ -67,6 +71,9 @@ Matrix<T>::Matrix(int rows, int columns, std::initializer_list<T> l)
 {
     if (rows < 0 || columns < 0)
         throw std::length_error{"Matrix constructor: negative size"};
+
+    if ((rows == 0 && columns != 0) || (rows != 0 && columns == 0))
+        throw std::length_error{"Matrix constructor: cannot have rows when there are 0 columns and vice versa"};
 
     if (static_cast<int>(l.size()) != rows * columns)
         throw std::length_error{"Matrix constructor: list does not match matrix size"};
@@ -110,6 +117,9 @@ int Matrix<T>::Rows() { return rows_; }
 
 template <typename T>
 int Matrix<T>::Columns() { return columns_; }
+
+template <typename T>
+bool Matrix<T>::empty() { return data_.empty(); }
 
 template <typename T>
 typename std::vector<T>::iterator Matrix<T>::begin() { return data_.begin(); }

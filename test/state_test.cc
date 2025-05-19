@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <iostream>
+#include <vector>
 
 #include "../src/matrix.h"
 #include "../src/state.h"
@@ -11,6 +12,25 @@ TEST(StateTest, InitAllFalse)
     EXPECT_EQ(-3, s.YOffset());
     EXPECT_EQ(-2, s.XOffset());
 }
+
+TEST(StateTest, InitEmpty)
+{
+    Matrix<bool> m;
+    State s(m);
+    EXPECT_EQ(std::vector<bool>({false, false, false, false}), s.GetMatrix().Data());
+    EXPECT_EQ(2, s.Rows());
+    EXPECT_EQ(2, s.Columns());
+}
+
+// TEST(StateTest, InitSmall)
+// {
+//     // matrix should be resized to at least 2x2 if smaller
+//     Matrix<bool> m();
+//     State s(m);
+//     EXPECT_EQ(std::vector<bool>({false, false, false, false}), s.GetMatrix().Data());
+//     EXPECT_EQ(2, s.Rows());
+//     EXPECT_EQ(2, s.Columns());
+// }
 
 TEST(StateTest, InitMargin)
 {

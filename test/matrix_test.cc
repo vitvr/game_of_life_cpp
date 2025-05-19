@@ -35,6 +35,14 @@ TEST(MatrixTest, EmptyInit)
     // EXPECT_EQ(0, empty_init_lists_matrix.Columns());
 }
 
+TEST(MatrixTest, OneDimensionInit)
+{
+    EXPECT_ANY_THROW(Matrix<int> m1(0, 3));
+    EXPECT_ANY_THROW(Matrix<int> m1(3, 0));
+    EXPECT_ANY_THROW(Matrix<int> m1(0, 3, {1, 2, 3}));
+    EXPECT_ANY_THROW(Matrix<int> m1(3, 0, {1, 2, 3}));
+}
+
 TEST(MatrixTest, OutOfRangeInit)
 {
     EXPECT_ANY_THROW(Matrix<bool> m1(-1, 3));
