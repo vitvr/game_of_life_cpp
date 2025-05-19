@@ -1,5 +1,9 @@
 #include "state.h"
+#include "matrix.h"
 #include <algorithm>
+#include <iostream>
+#include <numeric>
+#include <vector>
 
 // #include <fstream>
 // #include <iostream>
@@ -16,9 +20,43 @@ int State::YOffset() { return y_offset_; }
 
 int State::XOffset() { return x_offset_; }
 
+int State::Rows() { return grid_.Rows(); }
+
+int State::Columns() { return grid_.Columns(); }
+
 void State::Step()
 {
-    
+    Matrix<bool> new_grid(grid_.Rows(), grid_.Columns());
+
+    for (int i = 1; i != Rows() - 1; i++)
+    {
+        for (int j = 1; j != Columns() - 1; j++)
+        {
+            // above
+            std::vector<bool> v = grid_.GetSubRow(i - 1, j - 1, 3);
+            int neighbors = std::accumulate(v.begin(), v.end(), 0);
+            // beside
+            neighbors += grid_.Get(i, j - 1);
+            neighbors += grid_.Get(i, j + 1);
+            //below
+            v = grid_.GetSubRow(i + 1, j - 1, 3);
+            neighbors = std::accumulate(v.begin(), v.end(), neighbors);
+
+            if (!grid_.Get(i, j))
+            {
+                if (neighbors == 3)
+                    new_grid.Set(i, j, true);
+                continue;
+            }
+            
+            std::cerr << neighbors << '\n';
+
+            if (neighbors == 2 || neighbors == 3)
+                new_grid.Set(i, j, true);
+        }
+    }
+    grid_ = new_grid;
+    AddMargin();
 }
 
 void State::AddMargin()
@@ -27,24 +65,62 @@ void State::AddMargin()
     // if row is has a living cell
     if (std::find(v.begin(), v.end(), true) != v.end())
     {
-        --y_offset_;
+        y_offset_ -= 2;
         grid_.InsertRow(0, std::vector<bool>(grid_.Columns()));
+        grid_.InsertRow(0, std::vector<bool>(grid_.Columns()));
+    }
+    else
+    {
+        v = grid_.GetRow(1);
+        if (std::find(v.begin(), v.end(), true) != v.end())
+        {
+            --y_offset_;
+            grid_.InsertRow(0, std::vector<bool>(grid_.Columns()));
+        }
     }
 
     v = grid_.GetColumn(0);
     if (std::find(v.begin(), v.end(), true) != v.end())
     {
-        --x_offset_;
+        x_offset_ -= 2;
         grid_.InsertColumn(0, std::vector<bool>(grid_.Rows()));
+        grid_.InsertColumn(0, std::vector<bool>(grid_.Rows()));
+    }
+    else
+    {
+        v = grid_.GetColumn(1);
+        if (std::find(v.begin(), v.end(), true) != v.end())
+        {
+            --x_offset_;
+            grid_.InsertColumn(0, std::vector<bool>(grid_.Rows()));
+        }
     }
 
     v = grid_.GetRow(grid_.Rows() - 1);
     if (std::find(v.begin(), v.end(), true) != v.end())
+    {
         grid_.InsertRow(grid_.Rows(), std::vector<bool>(grid_.Columns()));
+        grid_.InsertRow(grid_.Rows(), std::vector<bool>(grid_.Columns()));
+    }
+    else
+    {
+        v = grid_.GetRow(grid_.Rows() - 2);
+        if (std::find(v.begin(), v.end(), true) != v.end())
+            grid_.InsertRow(grid_.Rows(), std::vector<bool>(grid_.Columns()));
+    }
 
     v = grid_.GetColumn(grid_.Columns() - 1);
     if (std::find(v.begin(), v.end(), true) != v.end())
+    {
         grid_.InsertColumn(grid_.Columns(), std::vector<bool>(grid_.Rows()));
+        grid_.InsertColumn(grid_.Columns(), std::vector<bool>(grid_.Rows()));
+    }
+    else
+    {
+        v = grid_.GetColumn(grid_.Columns() - 2);
+        if (std::find(v.begin(), v.end(), true) != v.end())
+            grid_.InsertColumn(grid_.Columns(), std::vector<bool>(grid_.Rows()));
+    }
 }
 
 // State::State(std::string file_name, char dead, char alive) : grid_ {ReadSeedFile(file_name, dead, alive)} {}

@@ -130,7 +130,7 @@ template <typename T>
 T Matrix<T>::Get(int row, int column)
 {
     if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::Get(int, int), out of range"};
 
     return data_[row * columns_ + column];
 }
@@ -139,7 +139,7 @@ template <typename T>
 void Matrix<T>::Set(int row, int column, T elem)
 {
     if (row < 0 || row >= rows_ || column < 0 || column >= columns_)
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::Set(int, int, T), out of range"};
 
     data_[row * columns_ + column] = elem;
 }
@@ -148,7 +148,7 @@ template <typename T>
 std::vector<T> Matrix<T>::GetRow(int n)
 {
     if (n < 0 || n >= rows_)
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::GetRow(int), out of range"};
 
     return std::vector<T>(std::next(data_.begin(), (n * columns_)), std::next(data_.begin(), (n * columns_) + columns_));
 }
@@ -157,10 +157,10 @@ template <typename T>
 std::vector<T> Matrix<T>::GetSubRow(int n, int pos, int length)
 {
     if (n < 0 || n >= rows_)
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::GetSubRow(n, pos, length), n out of range"};
 
     if (pos < 0 || pos > columns_ || length < 0 || length > (columns_ - pos))
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::GetSubRow(n, pos, length), pos or length out of range"};
 
     return std::vector<T>(std::next(data_.begin(), (n * columns_) + pos), std::next(data_.begin(), (n * columns_) + pos + length));
 }
@@ -206,7 +206,7 @@ template <typename T>
 void Matrix<T>::InsertRow(int pos, std::vector<T> row)
 {
     if (pos < 0 || pos > rows_)
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::InsertRow(pos, row), pos out of range"};
     if (row.size() != columns_)
         throw std::length_error{"Input row length does not match matrix row length"};
 
@@ -220,7 +220,7 @@ template <typename T>
 void Matrix<T>::InsertColumn(int pos, std::vector<T> column)
 {
     if (pos < 0 || pos > columns_)
-        throw std::out_of_range{""};
+        throw std::out_of_range{"Matrix<T>::InsertColumn(pos, row), pos out of range"};
     if (column.size() != rows_)
         throw std::length_error{"Input row length does not match matrix row length"};
 

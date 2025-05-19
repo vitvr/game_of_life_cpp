@@ -12,6 +12,9 @@ class State
         int YOffset();
         int XOffset();
 
+        int Rows();
+        int Columns();
+        
         void Step();
         
     private:
