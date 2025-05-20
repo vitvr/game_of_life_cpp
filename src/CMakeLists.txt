@@ -1,1 +1,1 @@
-add_executable(Life main.cc)
+add_executable(Life main.cc state.cc)

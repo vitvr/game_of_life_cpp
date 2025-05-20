@@ -3,3 +3,5 @@
 /build
 /notes.txt
 /.VSCodeCounter
+.cache
+compile_commands.json

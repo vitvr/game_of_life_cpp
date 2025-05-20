@@ -1,12 +1,9 @@
 #ifndef LIFE_MATRIX_H_
 #define LIFE_MATRIX_H_
 
-#include <cinttypes>
 #include <initializer_list>
-#include <iostream>
 #include <iterator>
 #include <stdexcept>
-#include <utility>
 #include <vector>
 
 template <typename T>
@@ -16,6 +13,10 @@ class Matrix
         Matrix();
         Matrix(int rows, int columns);
         Matrix(int rows, int columns, std::initializer_list<T> l);
+        template<class It>
+            requires std::convertible_to<typename std::iter_value_t<It>, T>
+        Matrix(int rows, int columns, It first, It last);
+        // Matrix(int rows, int columns
         // Matrix(std::initializer_list<T> l);
         // Matrix(std::initializer_list<std::initializer_list<T>> ll);
 
@@ -81,6 +82,31 @@ Matrix<T>::Matrix(int rows, int columns, std::initializer_list<T> l)
     rows_ = rows;
     columns_ = columns;
     data_ = l;
+}
+template<typename T>
+template<class It>
+    requires std::convertible_to<typename std::iter_value_t<It>, T>
+Matrix<T>::Matrix(int rows, int columns, It first, It last)
+{
+    if (rows < 0 || columns < 0)
+        throw std::length_error{"Matrix constructor: negative size"};
+
+    if ((rows == 0 && columns != 0) || (rows != 0 && columns == 0))
+        throw std::length_error{"Matrix constructor: cannot have rows when there are 0 columns and vice versa"};
+
+    std::vector<T> data {};
+    data.reserve(rows * columns);
+    for (It p = first; p != last; p = std::next(p))
+    {
+        data.push_back(*p);
+    }
+
+    if (data.size() != rows * columns)
+        throw std::length_error{"Matrix constructor: list does not match matrix size"};
+
+    rows_ = rows;
+    columns_ = columns;
+    data_ = data;
 }
 
 // template <typename T>

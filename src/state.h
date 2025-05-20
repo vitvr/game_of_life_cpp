@@ -20,7 +20,7 @@ class State
     private:
         Matrix<bool> grid_;
 
-        // coordinates of top left corner relative to center
+        // coordinates of center relative to (0, 0) (left corner)
         // to keep track of cells' fixed position as matrix is resized
         int y_offset_;
         int x_offset_;

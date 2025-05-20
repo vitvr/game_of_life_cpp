@@ -22,6 +22,12 @@ TEST(MatrixTest, EmptyInit)
     EXPECT_EQ(0, empty_sized_list_matrix.Rows());
     EXPECT_EQ(0, empty_sized_list_matrix.Columns());
 
+    std::vector<bool> b = {};
+    Matrix<bool> empty_iteraor_matrix(0,0, b.begin(), b.end());
+    EXPECT_EQ(std::vector<bool>(), empty_sized_list_matrix.Data());
+    EXPECT_EQ(0, empty_sized_list_matrix.Rows());
+    EXPECT_EQ(0, empty_sized_list_matrix.Columns());
+
     // Matrix<bool> empty_init_list_matrix = {};
 
     // EXPECT_EQ(std::vector<bool>(), empty_init_list_matrix.Data());
@@ -41,6 +47,9 @@ TEST(MatrixTest, OneDimensionInit)
     EXPECT_ANY_THROW(Matrix<int> m1(3, 0));
     EXPECT_ANY_THROW(Matrix<int> m1(0, 3, {1, 2, 3}));
     EXPECT_ANY_THROW(Matrix<int> m1(3, 0, {1, 2, 3}));
+    std::vector<int> b = {1, 2, 3};
+    EXPECT_ANY_THROW(Matrix<int> m1(3, 0, b.begin(), b.end()));
+    EXPECT_ANY_THROW(Matrix<int> m1(0, 3, b.begin(), b.end()));
 }
 
 TEST(MatrixTest, OutOfRangeInit)
@@ -49,6 +58,9 @@ TEST(MatrixTest, OutOfRangeInit)
     EXPECT_ANY_THROW(Matrix<bool> m2(3, -1));
 
     EXPECT_ANY_THROW(Matrix<bool> m2(2, 3, {true, false}));
+
+    std::vector<int> b = {1, 2, 3};
+    EXPECT_ANY_THROW(Matrix<int> m2(3, 2, b.begin(), b.end()));
 }
 
 TEST(MatrixTest, Init)
@@ -65,9 +77,15 @@ TEST(MatrixTest, Init)
 
     Matrix<bool> m2(2,2, {true, false, false, true});
     EXPECT_EQ(std::vector({true, false, false, true}), m2.Data());
+
+    std::vector<int> b = {1, 2, 3, 4, 5, 6};
+    Matrix<int> m3(2, 3, b.begin(), b.end());
+    EXPECT_EQ(b, m3.Data());
+    EXPECT_EQ(2, m3.Rows());
+    EXPECT_EQ(3, m3.Columns());
 }
 
-TEST(MatrixTest, Iterator)
+TEST(MatrixTest, IteratorOut)
 {
     Matrix<int> m1(2, 3, {1, 2, 3, 4, 5, 6});
     EXPECT_EQ(*m1.begin(), *m1.Data().begin());

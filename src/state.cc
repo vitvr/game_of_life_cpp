@@ -1,7 +1,6 @@
 #include "state.h"
 #include "matrix.h"
 #include <algorithm>
-#include <iostream>
 #include <numeric>
 #include <vector>
 
@@ -9,7 +8,7 @@
 // #include <iostream>
 // #include <vector>
 
-State::State(Matrix<bool> grid) : grid_ {grid}, y_offset_ {-int ((grid.Rows() - 1) / 2)}, x_offset_ {-int ((grid.Columns() - 1) / 2)} 
+State::State(Matrix<bool> grid) : grid_ {grid}, y_offset_ {int ((grid.Rows() - 1) / 2)}, x_offset_ {int ((grid.Columns() - 1) / 2)} 
 {
     // grid must be at least 2x2
     if (grid.empty())
@@ -61,8 +60,6 @@ void State::Step()
                     new_grid.Set(i, j, true);
                 continue;
             }
-            
-            std::cerr << neighbors << '\n';
 
             if (neighbors == 2 || neighbors == 3)
                 new_grid.Set(i, j, true);
@@ -78,7 +75,7 @@ void State::AddMargin()
     // if row is has a living cell
     if (std::find(v.begin(), v.end(), true) != v.end())
     {
-        y_offset_ -= 2;
+        y_offset_ += 2;
         grid_.InsertRow(0, std::vector<bool>(grid_.Columns()));
         grid_.InsertRow(0, std::vector<bool>(grid_.Columns()));
     }
@@ -87,7 +84,7 @@ void State::AddMargin()
         v = grid_.GetRow(1);
         if (std::find(v.begin(), v.end(), true) != v.end())
         {
-            --y_offset_;
+            ++y_offset_;
             grid_.InsertRow(0, std::vector<bool>(grid_.Columns()));
         }
     }
@@ -95,7 +92,7 @@ void State::AddMargin()
     v = grid_.GetColumn(0);
     if (std::find(v.begin(), v.end(), true) != v.end())
     {
-        x_offset_ -= 2;
+        x_offset_ += 2;
         grid_.InsertColumn(0, std::vector<bool>(grid_.Rows()));
         grid_.InsertColumn(0, std::vector<bool>(grid_.Rows()));
     }
@@ -104,7 +101,7 @@ void State::AddMargin()
         v = grid_.GetColumn(1);
         if (std::find(v.begin(), v.end(), true) != v.end())
         {
-            --x_offset_;
+            ++x_offset_;
             grid_.InsertColumn(0, std::vector<bool>(grid_.Rows()));
         }
     }
