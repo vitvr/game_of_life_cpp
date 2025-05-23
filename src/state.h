@@ -6,14 +6,15 @@
 class State
 {
     public:
+        State();
         State(Matrix<bool> grid);
 
-        Matrix<bool> GetMatrix();
-        int YOffset();
-        int XOffset();
+        Matrix<bool> GetMatrix() const;
+        int YOffset() const;
+        int XOffset() const;
 
-        int Rows();
-        int Columns();
+        int Rows() const;
+        int Columns() const;
         
         void Step();
         

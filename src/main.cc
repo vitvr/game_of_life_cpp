@@ -4,16 +4,15 @@
 #include <regex>
 #include <stdexcept>
 #include <string>
+#include <thread>
+#include <vector>
 
 #include "matrix.h"
 #include "state.h"
+#include "t_display.h"
 
-Matrix<bool> readRLE()
-{
-        std::ifstream file("gosper_glider_gun.rle");
-    if (!file)
-        throw "Could not read file";
-    
+Matrix<bool> ReadRLE(std::ifstream& file)
+{   
     // read and verify first line (header)
     std::regex r(R"(x\s*=\s*([123456789]+\d*),\s*y\s*=\s*([123456789]+\d*))");
     std::smatch m;
@@ -22,14 +21,11 @@ Matrix<bool> readRLE()
     std::regex_match(line, m, r);
 
     if (m.empty())
-        throw std::runtime_error{"File does not match .rle format"};
+        throw std::runtime_error{"File does not match .rle format (invalid header)"};
 
     // extract grid dimensions from header
     int columns = std::stoi(m[1]);
     int rows = std::stoi(m[2]);
-
-    // for (auto s : m)
-    //     std::cout << s << '\n';
 
     // read and verify rle pattern
     r.assign(R"((?:((?:\d*[bo]\s*)+\$)\s*)*((?:\d*[bo]\s*)+!))");
@@ -38,31 +34,21 @@ Matrix<bool> readRLE()
     {
         rle.append(line);
     }
-    // std::cout << rle << "END" << '\n';
     std::regex_match(rle, m, r);
     
     if (m.empty())
-        throw std::runtime_error{"File does not match .rle format"};
-    
-    // std::cout << '\n' << *m[1].first << '\n' << '\n';
-
-    // for (auto s : m)
-    //     std::cout << s << '\n';
-
-    // std::cout << '\n';
+        throw std::runtime_error{"File does not match .rle format (invalid pattern)"};
 
     std::vector<bool> grid;
     grid.reserve(rows * columns);
 
     // extract each row in the rle
-    // r.assign(R"((?:((?:\d*[bo]\s*)+\$)\s*))");
     r.assign(R"((?:((?:\d*[bo]\s*)+)[\$\!]\s*))");
     for (auto row_iter = std::sregex_iterator(rle.begin(), rle.end(), r); row_iter != std::sregex_iterator {}; row_iter = std::next(row_iter))
     {
         std::string row = (*row_iter)[0];
         // remove end of row/pattern character ($ or !)
         row.pop_back();
-        // std::cout << row << '\n';
         
         // extract each pair <run_count><tag> in the row
         std::regex r_pair(R"(\d+[bo]|[bo])");
@@ -74,9 +60,6 @@ Matrix<bool> readRLE()
             std::string pair = (*pair_iter)[0];
             std::regex r_pair_separate(R"((\d+)*([bo]))");
             std::regex_match(pair, m, r_pair_separate);
-
-            // std::cout << '\n';
-            // std::cout << (*pair_iter)[0] << '\n';
 
             int run_count;
             bool tag; // bool unless support for more than 2 states is added
@@ -94,10 +77,6 @@ Matrix<bool> readRLE()
                 tag = true;
 
             grid.insert(grid.end(), run_count, tag);
-            
-            // std::cout << '\n';
-            // std::cout << m[2];
-            // std::cout << '\n';
         }
 
         // fill in row to full length
@@ -105,47 +84,54 @@ Matrix<bool> readRLE()
 
     }
 
-    // std::cout << rows << '\n';
-    // std::cout << columns << '\n';
-    // std::cout << rows * columns << '\n';
-    // std::cout << grid.size() << '\n'; 
-    
-    // TODO ERROR Matrix constructor: list does not match matrix size
     return Matrix<bool>(rows, columns, grid.begin(), grid.end());
 }
 
-void Display(State s)
+int main(int argc, char* argv[])
 {
-    Matrix<bool> m = s.GetMatrix();
+    using namespace std::chrono_literals;
 
-    int i = 0;
-    for (auto p = m.begin(); p != m.end(); p = std::next(p))
+    if (argc != 2)
     {
-        if (i == m.Columns())
-        {
-            std::cout << '\n';
-            i = 0;
-        }
-
-        std::cout << *p;
-
-        ++i;
+        std::cout << "Pass path/to/input_file as an argument\n";
+        return 1;
     }
 
-    std::cout << '\n';
-}
+    std::ifstream file(argv[1]);
+    
+    if (!file)
+    {
+        std::cout << "Could not read file\n";
+        return 1;
+    }
 
-int main()
-{
-    State s(readRLE());
+    State s;
 
-    Display(s);
+    try 
+    {
+        s = ReadRLE(file);
+    }
+    catch (const std::runtime_error& e)
+    {
+        std::cout << e.what() << '\n';
+        return 1;
+    }
+    TDisplay d(80,30);
 
-    std::cout << '\n';
+    for (int i = 0; i != 120; ++i)
+    {
+        d.UpdateGame(s);
+        d.Print();
+        s.Step();
+        std::this_thread::sleep_for(42ms);
+    }
 
-    s.Step();
-
-    Display(s);;
+    for (int i = 0; i != 10; ++i)
+    {
+        d.UpdateGame(s, 'd');
+        d.Print();
+        std::this_thread::sleep_for(42ms);
+    }
 
     return 0;
 }

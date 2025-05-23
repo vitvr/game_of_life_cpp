@@ -331,6 +331,23 @@ TEST(MatrixTest, GetSubRow)
     EXPECT_EQ(std::vector<int>({5, 6}), m1.GetSubRow(1, 1, 2));
 }
 
+TEST(MatrixTest, SetSubRow)
+{
+    Matrix<int> m1(2, 3, {1, 2, 3, 4, 5, 6});
+    EXPECT_ANY_THROW(m1.SetSubRow(-1, 1, {}));
+    EXPECT_ANY_THROW(m1.SetSubRow(2, 1, {}));
+    EXPECT_ANY_THROW(m1.SetSubRow(1, -1, {}));
+    EXPECT_ANY_THROW(m1.SetSubRow(1, 3, {}));
+    EXPECT_ANY_THROW(m1.SetSubRow(1, 1, {-1, -2, -3}));
+
+    m1.SetSubRow(0, 0, {});
+    m1.SetSubRow(0, 0, {-1, -2, -3});
+    EXPECT_EQ(std::vector<int>({-1, -2, -3, 4, 5, 6}), m1.Data());
+
+    m1.SetSubRow(1, 1, {-5, -6});
+    EXPECT_EQ(std::vector<int>({-1, -2, -3, 4, -5, -6}), m1.Data());
+}
+
 TEST(MatrixTest, GetSubColumn)
 {
     Matrix<int> m1(4, 3, {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12});

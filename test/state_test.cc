@@ -15,11 +15,18 @@ TEST(StateTest, InitAllFalse)
 
 TEST(StateTest, InitEmpty)
 {
+    std::vector<bool> v = {false, false, false, false};
+
+    State s1;
+    EXPECT_EQ(v, s1.GetMatrix().Data());
+    EXPECT_EQ(2, s1.Rows());
+    EXPECT_EQ(2, s1.Columns());
+
     Matrix<bool> m;
-    State s(m);
-    EXPECT_EQ(std::vector<bool>({false, false, false, false}), s.GetMatrix().Data());
-    EXPECT_EQ(2, s.Rows());
-    EXPECT_EQ(2, s.Columns());
+    State s2(m);
+    EXPECT_EQ(v, s2.GetMatrix().Data());
+    EXPECT_EQ(2, s2.Rows());
+    EXPECT_EQ(2, s2.Columns());
 }
 
 TEST(StateTest, InitSmall)

@@ -20,11 +20,11 @@ class Matrix
         // Matrix(std::initializer_list<T> l);
         // Matrix(std::initializer_list<std::initializer_list<T>> ll);
 
-        std::vector<T> Data();
-        int Rows();
-        int Columns();
+        std::vector<T> Data() const;
+        int Rows() const;
+        int Columns() const;
 
-        bool empty();
+        bool empty() const;
         typename std::vector<T>::iterator begin();
         typename std::vector<T>::iterator end();
 
@@ -32,11 +32,13 @@ class Matrix
         T Get(int row, int column);
         void Set(int row, int column, T elem);
 
-        // These create copiess rather than references to matrix elements
+        // These create copies rather than references to matrix elements
         std::vector<T> GetRow(int n);
         std::vector<T> GetSubRow(int n, int pos, int length);
         std::vector<T> GetColumn(int n);
         std::vector<T> GetSubColumn(int n, int pos, int length);
+        
+        void SetSubRow(int n, int pos, std::vector<T> row);
         
         void InsertRow(int pos, std::vector<T> row);
         void InsertColumn(int pos, std::vector<T> column);
@@ -136,16 +138,16 @@ Matrix<T>::Matrix(int rows, int columns, It first, It last)
 // }
 
 template <typename T>
-std::vector<T> Matrix<T>::Data() { return data_; }
+std::vector<T> Matrix<T>::Data() const { return data_; }
 
 template <typename T>
-int Matrix<T>::Rows() { return rows_; }
+int Matrix<T>::Rows() const { return rows_; }
 
 template <typename T>
-int Matrix<T>::Columns() { return columns_; }
+int Matrix<T>::Columns() const { return columns_; }
 
 template <typename T>
-bool Matrix<T>::empty() { return data_.empty(); }
+bool Matrix<T>::empty() const { return data_.empty(); }
 
 template <typename T>
 typename std::vector<T>::iterator Matrix<T>::begin() { return data_.begin(); }
@@ -236,6 +238,19 @@ std::vector<T> Matrix<T>::GetSubColumn(int n, int pos, int length)
         column.push_back(*p);
 
     return column;
+}
+
+template <typename T>
+void Matrix<T>::SetSubRow(int n, int pos, std::vector<T> row)
+{
+    if (n < 0 || n >= rows_)
+        throw std::out_of_range{"Matrix<T>::SetSubRow(n, pos, row), n out of range"};
+
+    if (pos < 0 || pos >= columns_ || row.size() < 0 || row.size() > (columns_ - pos))
+        throw std::out_of_range{"Matrix<T>::SetSubRow(n, pos, row), pos or row.size() out of range"};
+
+    for (int i = 0; i != row.size(); ++i)
+        Set(n, pos + i, row[i]);
 }
 
 template <typename T>

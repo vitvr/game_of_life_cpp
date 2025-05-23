@@ -8,6 +8,8 @@
 // #include <iostream>
 // #include <vector>
 
+State::State() : grid_ {Matrix<bool>(2, 2)}, y_offset_ {0}, x_offset_ {0} {}
+
 State::State(Matrix<bool> grid) : grid_ {grid}, y_offset_ {int ((grid.Rows() - 1) / 2)}, x_offset_ {int ((grid.Columns() - 1) / 2)} 
 {
     // grid must be at least 2x2
@@ -26,15 +28,15 @@ State::State(Matrix<bool> grid) : grid_ {grid}, y_offset_ {int ((grid.Rows() - 1
     AddMargin();
 }
 
-Matrix<bool> State::GetMatrix() { return grid_; }
+Matrix<bool> State::GetMatrix() const { return grid_; }
 
-int State::YOffset() { return y_offset_; }
+int State::YOffset() const { return y_offset_; }
 
-int State::XOffset() { return x_offset_; }
+int State::XOffset() const { return x_offset_; }
 
-int State::Rows() { return grid_.Rows(); }
+int State::Rows() const { return grid_.Rows(); }
 
-int State::Columns() { return grid_.Columns(); }
+int State::Columns() const { return grid_.Columns(); }
 
 void State::Step()
 {
