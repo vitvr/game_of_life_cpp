@@ -126,5 +126,12 @@ int main(int argc, char* argv[])
         std::this_thread::sleep_for(42ms);
     }
 
+    for (int i = 0; i != 10; ++i)
+    {
+        d.UpdateGame(s, 'd');
+        d.Print();
+        std::this_thread::sleep_for(42ms);
+    }
+
     return 0;
 }

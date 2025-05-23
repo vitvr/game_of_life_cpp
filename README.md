@@ -4,8 +4,11 @@
 
 This is a personal project to learn C++ (as well as CMake and GoogleTest).
 
-## Build and Run
+## Build
 
     cmake -S . -B ./build
     cmake --build ./build
-    ./build/src/life
+
+## Run
+
+    ./build/src/life ./patterns/gosper_glider_gun.rle
